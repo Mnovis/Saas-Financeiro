@@ -22,6 +22,19 @@ interface Receita {
   categoria: { id: string; nome: string; cor: string };
 }
 
+// Converte Receita (data: string) para o formato esperado pelo formulário (data: Date)
+function receitaParaFormulario(r: Receita): TransacaoInput & { id: string } {
+  return {
+    id: r.id,
+    descricao: r.descricao,
+    valor: Number(r.valor),
+    data: new Date(r.data),
+    categoriaId: r.categoriaId,
+    observacao: r.observacao ?? "",
+    recorrente: r.recorrente,
+  };
+}
+
 export default function ReceitasPage() {
   const hoje = new Date();
   const [mes, setMes] = useState(hoje.getMonth() + 1);
@@ -88,7 +101,8 @@ export default function ReceitasPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Receitas</h1>
           <p className="text-sm text-muted-foreground">
-            {filtradas.length} registro(s) · Total: <span className="text-green-600 dark:text-green-400 font-semibold">{formatarMoeda(total)}</span>
+            {filtradas.length} registro(s) · Total:{" "}
+            <span className="text-green-600 dark:text-green-400 font-semibold">{formatarMoeda(total)}</span>
           </p>
         </div>
 
@@ -107,7 +121,7 @@ export default function ReceitasPage() {
               </DialogHeader>
               <FormTransacao
                 tipo="RECEITA"
-                inicial={editando ?? undefined}
+                inicial={editando ? receitaParaFormulario(editando) : undefined}
                 onSalvar={salvar}
                 onCancelar={fecharModal}
               />

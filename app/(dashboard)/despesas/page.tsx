@@ -23,6 +23,20 @@ interface Despesa {
   categoria: { id: string; nome: string; cor: string };
 }
 
+// Converte Despesa (data: string) para o formato esperado pelo formulário (data: Date)
+function despesaParaFormulario(d: Despesa): DespesaInput & { id: string } {
+  return {
+    id: d.id,
+    descricao: d.descricao,
+    valor: Number(d.valor),
+    data: new Date(d.data),
+    categoriaId: d.categoriaId,
+    observacao: d.observacao ?? "",
+    recorrente: d.recorrente,
+    pago: d.pago,
+  };
+}
+
 export default function DespesasPage() {
   const hoje = new Date();
   const [mes, setMes] = useState(hoje.getMonth() + 1);
@@ -119,7 +133,7 @@ export default function DespesasPage() {
               </DialogHeader>
               <FormTransacao
                 tipo="DESPESA"
-                inicial={editando ?? undefined}
+                inicial={editando ? despesaParaFormulario(editando) : undefined}
                 onSalvar={salvar}
                 onCancelar={fecharModal}
               />
