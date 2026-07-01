@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { FiltroMes } from "@/components/dashboard/filtro-mes";
 import { FormTransacao } from "@/components/forms/form-transacao";
-import type { DespesaInput } from "@/lib/validations";
+import type { DespesaInput, TransacaoInput } from "@/lib/validations";
 
 interface Despesa {
   id: string;
@@ -59,7 +59,7 @@ export default function DespesasPage() {
     buscarDespesas();
   }, [buscarDespesas]);
 
-  async function salvar(dados: DespesaInput) {
+  async function salvar(dados: TransacaoInput | DespesaInput) {
     const url = editando ? `/api/despesas/${editando.id}` : "/api/despesas";
     const method = editando ? "PUT" : "POST";
     await fetch(url, {
